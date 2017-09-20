@@ -5,6 +5,7 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import Qt
 import sys
 from philosopher import Philosopher
+from furcula import Furcula
 
 class MainApp(QWidget):
 
@@ -53,7 +54,9 @@ class MainApp(QWidget):
 
 	def addPhilosophers(self):
 		for i in range(0, 5):
-			Philosopher('', self, i, self.SIZE, self.DESK_SIZE)
+			Philosopher(self, i, self.SIZE, self.DESK_SIZE)
+			Furcula(self, i, self.SIZE, self.DESK_SIZE)
+
 
 if __name__ == '__main__':
 	app = QApplication(sys.argv)
