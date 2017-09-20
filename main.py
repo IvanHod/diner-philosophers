@@ -3,6 +3,7 @@ import sys
 
 from PyQt4.QtCore import Qt
 from PyQt4.QtGui import *
+import threading
 
 from lib.views.furcula import Furcula as ViewFurcula
 from lib.views.philosopher import Philosopher as ViewPhilosopher
@@ -26,6 +27,9 @@ class MainApp(QWidget):
 		self.addObjects()
 
 		self.show()
+
+		t = threading.Thread(target=self.taskCircle, args=())
+		t.start()
 
 	# Создать главное окно
 	def createMainWindow(self):
@@ -59,10 +63,34 @@ class MainApp(QWidget):
 
 	# добавить объекты игры
 	def addObjects(self):
+		furcules = []
 		for i in range(0, 5):
-			ViewPhilosopher(self, i, self.SIZE, self.DESK_SIZE)
-			ViewFurcula(self, i, self.SIZE, self.DESK_SIZE)
+			vFurcula = ViewFurcula(self, i, self.SIZE, self.DESK_SIZE)
+			furcula = Furcula(vFurcula)
+			furcules.append(furcula)
 
+		philosophers = []
+		for i in range(0, 5):
+			vPhilosopher = ViewPhilosopher(self, i, self.SIZE, self.DESK_SIZE)
+			philosopher = Philosopher(vPhilosopher, furcules[i], furcules[i < 4 if i + 1 else 0])
+
+			philosophers.append(philosopher)
+
+		self.philosophers = [
+			philosophers[0],
+			philosophers[2],
+			philosophers[4],
+			philosophers[1],
+			philosophers[3]
+		]
+
+	# Основной жизненой цикл задачи
+	def taskCircle(self):
+		while True:
+			self.philosophers[0].tryEat()
+
+	def finishedEat(self):
+		label = 1
 
 if __name__ == '__main__':
 	app = QApplication(sys.argv)

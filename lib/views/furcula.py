@@ -13,14 +13,14 @@ class Furcula(QLabel):
 		picture = QPixmap('img/furcula.png')
 		scaledPicture = picture.scaled(self.WIDTH, self.HEIGHT)
 
-		transform = QTransform().rotate(i * (360 - 72))
+		transform = QTransform().rotate(i * (360 + 72) + 145)
 		transformPicture = scaledPicture.transformed(transform, Qt.SmoothTransformation)
 
 		self.setPixmap(transformPicture)
 
 		center = mainSize / 2 - self.WIDTH
-		dx = numpy.cos(numpy.radians(i * 72 - 90)) * (deskSize / 3)
-		dy = numpy.sin(numpy.radians(i * 72 - 90)) * (deskSize / 3)
+		dx = numpy.cos(numpy.radians(128 - i * 72)) * (deskSize / 3)
+		dy = numpy.sin(numpy.radians(128 - i * 72)) * (deskSize / 3)
 		self.move(center + dx, center - dy)
 
 

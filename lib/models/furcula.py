@@ -7,3 +7,10 @@ class Furcula:
 
 	def isAccess(self):
 		return self.ACCESS
+
+	def setAccess(self, isAccess):
+		self.ACCESS = isAccess
+		if isAccess:
+			self.view.show()
+		else:
+			self.view.hide()

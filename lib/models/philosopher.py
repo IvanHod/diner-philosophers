@@ -1,3 +1,7 @@
+import threading
+import time
+
+
 class Philosopher:
 
 	IS_THINK = True
@@ -8,8 +12,19 @@ class Philosopher:
 		self.leftFurcula = leftFurcula
 		self.rightFurcula = rightFurcula
 
-	def canEat(self):
-		result = self.IS_EAT
-		if not result:
-			result = self.leftFurcula.isAccess() and self.rightFurcula.isAccess()
+		self.eatThread = threading.Thread(target=self.eat, args=())
+
+	def tryEat(self):
+		result = self.leftFurcula.isAccess() and self.rightFurcula.isAccess()
+
+		if not self.IS_EAT and result:
+			self.eatThread.start()
+
 		return result
+
+	def eat(self):
+		self.leftFurcula.setAccess(False)
+		self.rightFurcula.setAccess(False)
+		self.IS_EAT = True
+
+		time.sleep(2)
