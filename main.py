@@ -1,16 +1,20 @@
 # coding=utf-8
-from PyQt4 import QtGui
-
-from PyQt4.QtGui import *
-from PyQt4.QtCore import Qt
 import sys
-from philosopher import Philosopher
-from furcula import Furcula
+
+from PyQt4.QtCore import Qt
+from PyQt4.QtGui import *
+
+from lib.views.furcula import Furcula as ViewFurcula
+from lib.views.philosopher import Philosopher as ViewPhilosopher
+from lib.models.furcula import Furcula
+from lib.models.philosopher import Philosopher
+
 
 class MainApp(QWidget):
-
 	SIZE = 600
 	DESK_SIZE = 300
+
+	philosophers = []
 
 	def __init__(self):
 		super(MainApp, self).__init__()
@@ -19,7 +23,7 @@ class MainApp(QWidget):
 
 		self.addDesk()
 
-		self.addPhilosophers()
+		self.addObjects()
 
 		self.show()
 
@@ -43,6 +47,7 @@ class MainApp(QWidget):
 		qr.moveCenter(cp)
 		self.move(qr.topLeft())
 
+	# Добавить стол
 	def addDesk(self):
 		image = QPixmap('img/table.png')
 		scaledImage = image.scaled(self.DESK_SIZE, self.DESK_SIZE)
@@ -52,10 +57,11 @@ class MainApp(QWidget):
 		offset = self.SIZE / 2 - self.DESK_SIZE / 2
 		label.move(offset, offset)
 
-	def addPhilosophers(self):
+	# добавить объекты игры
+	def addObjects(self):
 		for i in range(0, 5):
-			Philosopher(self, i, self.SIZE, self.DESK_SIZE)
-			Furcula(self, i, self.SIZE, self.DESK_SIZE)
+			ViewPhilosopher(self, i, self.SIZE, self.DESK_SIZE)
+			ViewFurcula(self, i, self.SIZE, self.DESK_SIZE)
 
 
 if __name__ == '__main__':
