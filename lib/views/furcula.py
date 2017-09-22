@@ -1,11 +1,13 @@
 import numpy
-from PyQt4.QtGui import (QTransform, QLabel, QPixmap)
-from PyQt4.QtCore import (Qt)
+from PyQt4.QtGui import (QWidget, QTransform, QLabel, QPixmap)
+from PyQt4.QtCore import (Qt, pyqtSignal)
 
 
 class Furcula(QLabel):
 	WIDTH = 15
 	HEIGHT = 45
+
+	toggleFurcula = pyqtSignal(bool, QWidget)
 
 	def __init__(self, parent, i, mainSize, deskSize):
 		QLabel.__init__(self, parent)
@@ -14,7 +16,7 @@ class Furcula(QLabel):
 		scaledPicture = picture.scaled(self.WIDTH, self.HEIGHT)
 
 		transform = QTransform().rotate(i * (360 + 72) + 145)
-		transformPicture = scaledPicture.transformed(transform, Qt.SmoothTransformation)
+		self.picture = transformPicture = scaledPicture.transformed(transform, Qt.SmoothTransformation)
 
 		self.setPixmap(transformPicture)
 
@@ -23,4 +25,9 @@ class Furcula(QLabel):
 		dy = numpy.sin(numpy.radians(128 - i * 72)) * (deskSize / 3)
 		self.move(center + dx, center - dy)
 
+	# def toggleFurcula(self, isVisible):
+	# 	if True:
+	# 		self.setPixmap(self.picture)
+	# 	else:
+	# 		self.clear()
 

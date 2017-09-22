@@ -1,9 +1,10 @@
 # coding=utf-8
 import sys
 
-from PyQt4.QtCore import Qt
+from PyQt4.QtCore import Qt, SIGNAL, SLOT, pyqtSlot
 from PyQt4.QtGui import *
 import threading
+import time
 
 from lib.views.furcula import Furcula as ViewFurcula
 from lib.views.philosopher import Philosopher as ViewPhilosopher
@@ -66,13 +67,15 @@ class MainApp(QWidget):
 		furcules = []
 		for i in range(0, 5):
 			vFurcula = ViewFurcula(self, i, self.SIZE, self.DESK_SIZE)
-			furcula = Furcula(vFurcula)
+			furcula = Furcula(vFurcula, i)
+			# self.connect(vFurcula, SIGNAL('toggleState'), self, SLOT('toggleFurcula(MainApp)'), Qt.AutoConnection)
+			vFurcula.toggleFurcula.connect(self.toggleFurcula)
 			furcules.append(furcula)
 
 		philosophers = []
 		for i in range(0, 5):
 			vPhilosopher = ViewPhilosopher(self, i, self.SIZE, self.DESK_SIZE)
-			philosopher = Philosopher(vPhilosopher, furcules[i], furcules[i < 4 if i + 1 else 0])
+			philosopher = Philosopher(vPhilosopher, furcules[i], furcules[i + 1 if i < 4 else 0])
 
 			philosophers.append(philosopher)
 
@@ -87,10 +90,14 @@ class MainApp(QWidget):
 	# Основной жизненой цикл задачи
 	def taskCircle(self):
 		while True:
-			self.philosophers[0].tryEat()
+			if self.philosophers[0].tryEat():
+				eatPhilosopher = self.philosophers[0]
+				self.philosophers.remove(eatPhilosopher)
+				self.philosophers.append(eatPhilosopher)
 
-	def finishedEat(self):
-		label = 1
+	@pyqtSlot(bool, QWidget)
+	def toggleFurcula(self, isVisible, view):
+		view.setVisible(isVisible)
 
 if __name__ == '__main__':
 	app = QApplication(sys.argv)
