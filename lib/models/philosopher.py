@@ -14,24 +14,23 @@ class Philosopher:
 
 	def tryEat(self):
 		result = self.leftFurcula.isAccess() and self.rightFurcula.isAccess()
+		result &= not self.IS_EAT
 
-		canEat = not self.IS_EAT and result
-		if canEat:
+		if result:
 			thread = threading.Thread(target=self.eat)
 			thread.start()
 
 		return result
 
 	def eat(self):
-		print 'eat'
-		self.leftFurcula.setAccess(False)
-		self.rightFurcula.setAccess(False)
-		self.view.setEat(True)
-		self.IS_EAT = True
+		self.toggleEatProcess(True)
 
-		time.sleep(3)
+		time.sleep(4)
 
-		self.leftFurcula.setAccess(True)
-		self.rightFurcula.setAccess(True)
-		self.IS_EAT = False
-		self.view.setEat(False)
+		self.toggleEatProcess(False)
+
+	def toggleEatProcess(self, isEat):
+		self.view.toggleState.emit(isEat, self.view)
+		self.IS_EAT = isEat
+		self.leftFurcula.setAccess(not isEat)
+		self.rightFurcula.setAccess(not isEat)

@@ -11,6 +11,7 @@ class Furcula(QLabel):
 
 	def __init__(self, parent, i, mainSize, deskSize):
 		QLabel.__init__(self, parent)
+		self.index = i
 
 		picture = QPixmap('img/furcula.png')
 		scaledPicture = picture.scaled(self.WIDTH, self.HEIGHT)
@@ -25,9 +26,4 @@ class Furcula(QLabel):
 		dy = numpy.sin(numpy.radians(128 - i * 72)) * (deskSize / 3)
 		self.move(center + dx, center - dy)
 
-	# def toggleFurcula(self, isVisible):
-	# 	if True:
-	# 		self.setPixmap(self.picture)
-	# 	else:
-	# 		self.clear()
 

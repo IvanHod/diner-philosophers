@@ -67,14 +67,16 @@ class MainApp(QWidget):
 		furcules = []
 		for i in range(0, 5):
 			vFurcula = ViewFurcula(self, i, self.SIZE, self.DESK_SIZE)
-			furcula = Furcula(vFurcula, i)
-			# self.connect(vFurcula, SIGNAL('toggleState'), self, SLOT('toggleFurcula(MainApp)'), Qt.AutoConnection)
 			vFurcula.toggleFurcula.connect(self.toggleFurcula)
+
+			furcula = Furcula(vFurcula, i)
 			furcules.append(furcula)
 
 		philosophers = []
 		for i in range(0, 5):
 			vPhilosopher = ViewPhilosopher(self, i, self.SIZE, self.DESK_SIZE)
+			vPhilosopher.toggleState.connect(self.togglePhilosopher)
+
 			philosopher = Philosopher(vPhilosopher, furcules[i], furcules[i + 1 if i < 4 else 0])
 
 			philosophers.append(philosopher)
@@ -94,10 +96,15 @@ class MainApp(QWidget):
 				eatPhilosopher = self.philosophers[0]
 				self.philosophers.remove(eatPhilosopher)
 				self.philosophers.append(eatPhilosopher)
+			time.sleep(2)
 
 	@pyqtSlot(bool, QWidget)
 	def toggleFurcula(self, isVisible, view):
 		view.setVisible(isVisible)
+
+	@pyqtSlot(bool, QWidget)
+	def togglePhilosopher(self, isVisible, view):
+		view.setState(isVisible)
 
 if __name__ == '__main__':
 	app = QApplication(sys.argv)
