@@ -15,6 +15,7 @@ from lib.models.philosopher import Philosopher
 class MainApp(QWidget):
 	SIZE = 600
 	DESK_SIZE = 300
+	MAX_PHILOSOPHER = 5
 
 	philosophers = []
 
@@ -65,7 +66,7 @@ class MainApp(QWidget):
 	# добавить объекты игры
 	def addObjects(self):
 		furcules = []
-		for i in range(0, 5):
+		for i in range(0, self.MAX_PHILOSOPHER):
 			vFurcula = ViewFurcula(self, i, self.SIZE, self.DESK_SIZE)
 			vFurcula.toggleFurcula.connect(self.toggleFurcula)
 
@@ -73,7 +74,7 @@ class MainApp(QWidget):
 			furcules.append(furcula)
 
 		philosophers = []
-		for i in range(0, 5):
+		for i in range(0, self.MAX_PHILOSOPHER):
 			vPhilosopher = ViewPhilosopher(self, i, self.SIZE, self.DESK_SIZE)
 			vPhilosopher.toggleState.connect(self.togglePhilosopher)
 
@@ -81,13 +82,8 @@ class MainApp(QWidget):
 
 			philosophers.append(philosopher)
 
-		self.philosophers = [
-			philosophers[0],
-			philosophers[2],
-			philosophers[4],
-			philosophers[1],
-			philosophers[3]
-		]
+		for i in range(0, self.MAX_PHILOSOPHER * 2, 2):
+			self.philosophers.append(philosophers[i % self.MAX_PHILOSOPHER])
 
 	# Основной жизненой цикл задачи
 	def taskCircle(self):
